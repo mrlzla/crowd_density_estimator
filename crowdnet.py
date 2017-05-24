@@ -6,8 +6,8 @@ from keras.models import Model
 from preprocessing import load_data, preprocess_data
 
 
-def create_left_branch(x, kernel_size=(3, 3)):
-  x = Conv2D(64, kernel_size, padding='same')(x)
+def create_left_branch(input_layer, kernel_size=(3, 3)):
+  x = Conv2D(64, kernel_size, padding='same')(input_layer)
   x = BatchNormalization()(x)
   x = Activation('relu')(x)
   x = Conv2D(64, kernel_size, padding='same')(x)
@@ -60,8 +60,8 @@ def create_left_branch(x, kernel_size=(3, 3)):
 
   return x
 
-def create_right_branch(x, kernel_size=(5, 5)):
-  x = Conv2D(24, kernel_size, padding='same')(x)
+def create_right_branch(input_layer, kernel_size=(5, 5)):
+  x = Conv2D(24, kernel_size, padding='same')(input_layer)
   x = BatchNormalization()(x)
   x = Activation('relu')(x)
   x = AveragePooling2D(pool_size=(5, 5), padding='same', strides=1)(x)
@@ -104,7 +104,7 @@ class CheckPoints(Callback):
     path = "weights"
     if not os.path.exists(path):
         os.makedirs(path)
-    if self.epoch_nmb % 1000 == 0:
+    if self.epoch_nmb % 100 == 0:
       self.model.save("{}/step_{}.h5".format(path, self.epoch_nmb))
     self.epoch_nmb += 1
     return
@@ -119,6 +119,6 @@ if __name__ == '__main__':
   batch_size=1
   model = create_model(batch_size)
   tensorboard_callback = TensorBoard(log_dir='./output', write_graph=True, write_images=True)
-  model.fit_generator(load_data(batch_size=batch_size), epochs=10000, verbose=True, steps_per_epoch=50,
+  model.fit_generator(load_data(batch_size=batch_size), epochs=100000, verbose=True, steps_per_epoch=50,
    callbacks=[CheckPoints(), tensorboard_callback])
   model.save('weights.h5')
