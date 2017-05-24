@@ -37,6 +37,7 @@ def create_left_branch(input_layer, kernel_size=(3, 3)):
   x = MaxPooling2D(pool_size=(2, 2), padding='same', strides=1)(x)
   x = Dropout(0.5)(x)
 
+  # Stripped-down version because I have only 4GB video memory
   #x = Conv2D(512, kernel_size, padding='same')(x)
   #x = BatchNormalization()(x)
   #x = Activation('relu')(x)

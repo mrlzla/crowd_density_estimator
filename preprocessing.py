@@ -87,13 +87,11 @@ def create_data(dirname='UCF_CC_50'):
               with h5py.File("{}/{:0>5d}.h5".format(labels_path, cnt), 'w') as hf:
                 hf['density'] = resized_density
       print(filename + " has already processed!")
-  #save_to_csv(results)
  
 def load_data(batch_size = 64, imagedir='UCF_CC_50/results', densitydir='UCF_CC_50/labels'):
   filenames = get_filenames(dirname=imagedir, ext='jpg')
   np.random.shuffle(filenames)
   images, densities = np.zeros([batch_size, 225, 225, 3]), np.zeros([batch_size, 225, 225, 1])
-  #import ipdb; ipdb.set_trace()
   for i, filename in enumerate(filenames):
     image = preprocess_data(imread("{}/{}".format(imagedir, filename)))
     with h5py.File("{}/{}.h5".format(densitydir, filename.split('.')[0]), 'r') as hf:
@@ -105,7 +103,7 @@ def load_data(batch_size = 64, imagedir='UCF_CC_50/results', densitydir='UCF_CC_
     images[i % batch_size] = image
     densities[i % batch_size] = density
     if (i + 1) % batch_size == 0:
-      yield np.array(images), np.array(densities)
+      yield images, densities
       images, densities = np.zeros([batch_size, 225, 225, 3]), np.zeros([batch_size, 225, 225, 1])
  
 def preprocess_data(image):
